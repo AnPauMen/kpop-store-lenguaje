@@ -1,0 +1,47 @@
+package com.web.kpop_store.controller;
+
+import com.web.kpop_store.entity.Usuario;
+import com.web.kpop_store.security.JwtUtil;
+import com.web.kpop_store.service.UsuarioService;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.web.bind.annotation.*;
+import java.util.Map;
+
+@RestController
+@RequestMapping("/api/auth")
+public class AuthController {
+
+    private final UsuarioService usuarioService;
+    private final JwtUtil jwtUtil;
+    private final AuthenticationManager authenticationManager;
+
+    public AuthController(UsuarioService usuarioService, JwtUtil jwtUtil, AuthenticationManager authenticationManager) {
+        this.usuarioService = usuarioService;
+        this.jwtUtil = jwtUtil;
+        this.authenticationManager = authenticationManager;
+    }
+
+    @PostMapping("/registro")
+    public ResponseEntity<Usuario> registro(@RequestBody Usuario usuario) {
+        return ResponseEntity.ok(usuarioService.registrar(usuario));
+    }
+
+    @PostMapping("/login")
+    public ResponseEntity<Map<String, String>> login(@RequestBody Map<String, String> credenciales) {
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        credenciales.get("email"),
+                        credenciales.get("password")
+                )
+        );
+        String email = credenciales.get("email");
+        String token = jwtUtil.generateToken(email);
+        Usuario usuario = usuarioService.buscarPorEmail(email);
+        return ResponseEntity.ok(Map.of(
+                "token", token,
+                "rol", usuario.getRol().name()
+        ));
+    }
+}
