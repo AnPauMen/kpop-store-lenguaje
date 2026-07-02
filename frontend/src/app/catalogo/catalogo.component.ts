@@ -34,13 +34,13 @@ export class CatalogoComponent implements OnInit {
 
   private productos = signal<Producto[]>([]);
 
-  productosFiltrados = computed(() => {
-    return this.productos().filter(p => {
-      const coincideCategoria = this.categoriaActiva === 'TODOS' || p.categoria === this.categoriaActiva;
-      const coincideBusqueda = p.nombre.toLowerCase().includes(this.busqueda.toLowerCase());
-      return coincideCategoria && coincideBusqueda;
-    });
+  productosFiltrados(): Producto[] {
+  return this.productos().filter(p => {
+    const coincideCategoria = this.categoriaActiva === 'TODOS' || p.categoria === this.categoriaActiva;
+    const coincideBusqueda = p.nombre.toLowerCase().includes(this.busqueda.toLowerCase());
+    return coincideCategoria && coincideBusqueda;
   });
+}
 
   constructor(
     public carritoService: CarritoService,
