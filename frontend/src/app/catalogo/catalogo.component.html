@@ -4,12 +4,13 @@
     <h1>✦ Catálogo</h1>
     <p>{{ productosFiltrados().length }} productos disponibles</p>
     <div class="header-actions">
-    <a routerLink="/pedidos/historial" class="historial-btn">📋 Mis pedidos</a>
-    <a routerLink="/carrito" class="carrito-btn">
-      🛒 <span *ngIf="carritoService.cantidadTotal() > 0" class="carrito-badge">{{ carritoService.cantidadTotal() }}</span>
-    </a>
+      <a routerLink="/pedidos/historial" class="historial-btn">📋 Mis pedidos</a>
+      <button class="logout-btn" (click)="logout()">Cerrar Sesión</button>
+      <a routerLink="/carrito" class="carrito-btn">
+        🛒 <span *ngIf="carritoService.cantidadTotal() > 0" class="carrito-badge">{{ carritoService.cantidadTotal() }}</span>
+      </a>
+    </div>
   </div>
-</div>
 
   <!-- Filtros -->
   <div class="filtros-bar">
@@ -39,8 +40,8 @@
       <div class="producto-img-wrap">
         <img [src]="p.imagen || 'assets/placeholder.png'" [alt]="p.nombre" />
         <span class="producto-tag">
-  {{ p.subcategoria || p.categoria }}
-</span>
+          {{ p.subcategoria || p.categoria }}
+        </span>
         <div class="producto-overlay">
           <span class="overlay-text">+ Agregar</span>
         </div>

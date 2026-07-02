@@ -1,9 +1,10 @@
-import { Component, computed, signal, OnInit } from '@angular/core';
+import { Component, signal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CarritoService } from '../services/carrito.service';
 import { ProductoService, ProductoBackend } from '../services/producto.service';
-import {RouterLink} from '@angular/router';
+import { RouterLink } from '@angular/router';
+import { AuthService } from '../services/auth.service';
 
 export interface Producto {
   id: number;
@@ -35,17 +36,22 @@ export class CatalogoComponent implements OnInit {
   private productos = signal<Producto[]>([]);
 
   productosFiltrados(): Producto[] {
-  return this.productos().filter(p => {
-    const coincideCategoria = this.categoriaActiva === 'TODOS' || p.categoria === this.categoriaActiva;
-    const coincideBusqueda = p.nombre.toLowerCase().includes(this.busqueda.toLowerCase());
-    return coincideCategoria && coincideBusqueda;
-  });
-}
+    return this.productos().filter(p => {
+      const coincideCategoria = this.categoriaActiva === 'TODOS' || p.categoria === this.categoriaActiva;
+      const coincideBusqueda = p.nombre.toLowerCase().includes(this.busqueda.toLowerCase());
+      return coincideCategoria && coincideBusqueda;
+    });
+  }
 
   constructor(
     public carritoService: CarritoService,
-    private productoService: ProductoService
+    private productoService: ProductoService,
+    private authService: AuthService
   ) {}
+
+  logout() {
+    this.authService.logout();
+  }
 
   ngOnInit() {
     this.cargando = true;
