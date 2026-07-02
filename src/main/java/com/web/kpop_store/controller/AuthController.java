@@ -40,8 +40,10 @@ public class AuthController {
         String token = jwtUtil.generateToken(email);
         Usuario usuario = usuarioService.buscarPorEmail(email);
         return ResponseEntity.ok(Map.of(
-                "token", token,
-                "rol", usuario.getRol().name()
+            "token", token,
+            "rol", usuario.getRol().name(),
+            "email", email,
+            "usuarioId", String.valueOf(usuario.getId())
         ));
     }
 }
